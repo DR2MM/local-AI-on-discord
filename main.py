@@ -3,7 +3,7 @@ from discord import app_commands
 from discord.ext import commands
 
 #vars
-TOKEN = "MTQyOTg3NTI2MDE5ODQ5MDIyMg.GnqWJZ.EkN29x4QeAzmm_sEgUZgc2QF5l9yqslx_EG85s"
+TOKEN = "YOUR_TOKEN"
 logging.basicConfig( level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s", handlers=[logging.FileHandler("bot.log", encoding="utf-8"),logging.StreamHandler()])
 intents = discord.Intents.default()
 bot = commands.Bot(command_prefix="!", intents=intents)  
