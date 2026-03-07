@@ -12,6 +12,7 @@ CHECK_EVERY = 10
 last_used = {}
 last_used_lock = asyncio.Lock()
 OLLAMA_CHAT_URL = "http://localhost:11434/api/chat"
+active_models = set()
 #functions
 def check_runnig_model(model: str):
     output = subprocess.check_output(["ollama", "ps"], text=True)
@@ -95,11 +96,13 @@ async def running_models(interaction: discord.Interaction):
 @app_commands.describe(text="Your question")
 async def ask(interaction: discord.Interaction, text: str):
     model = "llava:7b"
+    active_models.add(model)
     await mark_model_used(model)
     check_runnig_model(model)
     await interaction.response.send_message("Thinking...")
     try:
         reply = await ollama_chat(model, [{"role": "user", "content": text}], timeout_s=180)
+        active_models.discard(model)
     except asyncio.TimeoutError:
         await interaction.edit_original_response(content="Timed out waiting for Ollama.")
         return
@@ -117,11 +120,13 @@ async def ask(interaction: discord.Interaction, text: str):
 @app_commands.describe(text="Your coding question")
 async def code(interaction: discord.Interaction, text: str):
     model = "qwen2.5-coder:7b"
+    active_models.add(model)
     await mark_model_used(model)
     check_runnig_model(model)
     await interaction.response.send_message("Thinking...")
     try:
         reply = await ollama_chat(model, [{"role": "user", "content": text}], timeout_s=240)
+        active_models.discard(model)
     except asyncio.TimeoutError:
         await interaction.edit_original_response(content="Timed out waiting for Ollama.")
         return
@@ -139,6 +144,7 @@ async def code(interaction: discord.Interaction, text: str):
 async def analyze(
     interaction: discord.Interaction,image: discord.Attachment,prompt: str = "Describe this image:"):
     model = "moondream:latest"
+    active_models.add(model)
     await mark_model_used(model)
     check_runnig_model(model)
     await interaction.response.send_message("Thinking...")
@@ -151,6 +157,7 @@ async def analyze(
                 image_bytes = await resp.read()
         img_b64 = base64.b64encode(image_bytes).decode("utf-8")
         reply = await ollama_chat( model, [{"role": "user", "content": prompt, "images": [img_b64]}], timeout_s=300,)
+        active_models.discard(model)
     except asyncio.TimeoutError:
         await interaction.edit_original_response(content="Timed out waiting for Ollama.")
         return
