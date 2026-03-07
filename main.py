@@ -58,25 +58,30 @@ async def model_idle_killer():
         try:
             running = await ollama_ps_models()
             now = time.monotonic()
+
             async with last_used_lock:
                 to_stop = []
+
                 for m in running:
+                    if m in active_models:
+                        continue  # model is currently working
+
                     last = last_used.get(m)
-                    if last is None:
-                        last_used[m] = now
-                        continue
-                    if now - last > MODEL_IDLE_TIMEOUT:
+                    if last and now - last > MODEL_IDLE_TIMEOUT:
                         to_stop.append(m)
+
             for m in to_stop:
-                print(f"[Idle Killer] Stopping idle model: {m}")
+                logger.info(f"Stopping idle model: {m}")
                 await ollama_stop(m)
+
                 async with last_used_lock:
                     last_used.pop(m, None)
-        except Exception as e:
-            print("Idle killer error:", e)
+
+        except Exception:
+            logger.exception("Idle killer error")
 
         await asyncio.sleep(CHECK_EVERY)
-
+        
 # Commands
 @bot.event
 async def on_ready():
