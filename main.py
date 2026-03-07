@@ -33,7 +33,7 @@ async def ollama_chat(model, messages, timeout_s = 180):
     return data["message"]["content"]
 
 def chunk(text: str, size: int = 1900):
-    """Discord hard limit is 2000; keep margin for safety."""
+    # Discord's hard limit is 2000; keep margin for safety.
     for i in range(0, len(text), size):
         yield text[i : i + size]
 
