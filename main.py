@@ -2,7 +2,7 @@ import asyncio, base64, subprocess, logging, time, aiohttp, discord
 from discord import app_commands
 from discord.ext import commands
 
-#vars
+# Vars
 TOKEN = "YOUR_TOKEN"
 logging.basicConfig( level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s", handlers=[logging.FileHandler("bot.log", encoding="utf-8"),logging.StreamHandler()])
 intents = discord.Intents.default()
@@ -13,7 +13,8 @@ last_used = {}
 last_used_lock = asyncio.Lock()
 OLLAMA_CHAT_URL = "http://localhost:11434/api/chat"
 active_models = set()
-#functions
+
+# Functions
 def check_runnig_model(model: str):
     output = subprocess.check_output(["ollama", "ps"], text=True)
     lines = output.strip().split("\n")[1:]
@@ -26,10 +27,7 @@ def check_runnig_model(model: str):
 async def ollama_chat(model, messages, timeout_s = 180):
     timeout = aiohttp.ClientTimeout(total=timeout_s)
     async with aiohttp.ClientSession(timeout=timeout) as session:
-        async with session.post(
-            OLLAMA_CHAT_URL,
-            json={"model": model, "messages": messages, "stream": False},
-        ) as resp:
+        async with session.post( OLLAMA_CHAT_URL, json={"model": model, "messages": messages, "stream": False}) as resp:
             resp.raise_for_status()
             data = await resp.json()
     return data["message"]["content"]
@@ -79,20 +77,21 @@ async def model_idle_killer():
 
         await asyncio.sleep(CHECK_EVERY)
 
+# Commands
 @bot.event
 async def on_ready():
     print(f"Logged in as {bot.user}")
     bot.loop.create_task(model_idle_killer())
     await bot.tree.sync()
 
-@bot.tree.command(name="running_models", description="Show currently running Ollama models")
+@bot.tree.command(name="active_models", description="Show currently running Ollama models")
 async def running_models(interaction: discord.Interaction):
     output = subprocess.check_output(["ollama", "ps"], text=True)
     lines = output.strip().split("\n")[1:]
     models = [line.split()[0] for line in lines if line]
-    await interaction.response.send_message(f"running models: {models}", ephemeral=False)
+    await interaction.response.send_message(f"Active models: {models}", ephemeral=False)
 
-@bot.tree.command(name="ask", description="Ask the small general model")
+@bot.tree.command(name="ask", description="Ask the general model")
 @app_commands.describe(text="Your question")
 async def ask(interaction: discord.Interaction, text: str):
     model = "llava:7b"
@@ -110,7 +109,7 @@ async def ask(interaction: discord.Interaction, text: str):
         await interaction.edit_original_response(content=f"Error: {type(e).__name__}: {e}")
         return
 
-    # handle long replies
+    # bypassing Discord's 2000 char limit
     parts = list(chunk(reply))
     await interaction.edit_original_response(content=parts[0])
     for p in parts[1:]:
