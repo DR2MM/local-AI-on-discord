@@ -7,8 +7,8 @@ TOKEN = "YOUR_TOKEN"
 logging.basicConfig( level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s", handlers=[logging.FileHandler("bot.log", encoding="utf-8"),logging.StreamHandler()])
 intents = discord.Intents.default()
 bot = commands.Bot(command_prefix="!", intents=intents)  
-MODEL_IDLE_TIMEOUT = 600 
-CHECK_EVERY = 10           
+MODEL_IDLE_TIMEOUT = 600                        # the max amount of time a model can stay up doing nothing (better for saving resources)
+CHECK_EVERY = 10                                # the amount of time the code checks for idle models
 last_used = {}
 last_used_lock = asyncio.Lock()
 OLLAMA_CHAT_URL = "http://localhost:11434/api/chat"
@@ -32,8 +32,7 @@ async def ollama_chat(model, messages, timeout_s = 180):
             data = await resp.json()
     return data["message"]["content"]
 
-def chunk(text: str, size: int = 1900):
-    # Discord's hard limit is 2000; keep margin for safety.
+def chunk(text: str, size: int = 1900):             # Discord's hard limit is 2000; keep margin for safety.
     for i in range(0, len(text), size):
         yield text[i : i + size]
 
@@ -64,7 +63,7 @@ async def model_idle_killer():
 
                 for m in running:
                     if m in active_models:
-                        continue  # model is currently working
+                        continue                    # Model is currently working
 
                     last = last_used.get(m)
                     if last and now - last > MODEL_IDLE_TIMEOUT:
@@ -99,7 +98,7 @@ async def running_models(interaction: discord.Interaction):
 @bot.tree.command(name="ask", description="Ask the general model")
 @app_commands.describe(text="Your question")
 async def ask(interaction: discord.Interaction, text: str):
-    model = "llava:7b"
+    model = "llava:7b"                              # You can change the model deppending on your hardware
     active_models.add(model)
     await mark_model_used(model)
     check_runnig_model(model)
@@ -123,7 +122,7 @@ async def ask(interaction: discord.Interaction, text: str):
 @bot.tree.command(name="code", description="Ask the coding model")
 @app_commands.describe(text="Your coding question")
 async def code(interaction: discord.Interaction, text: str):
-    model = "qwen2.5-coder:7b"
+    model = "qwen2.5-coder:7b"                      # You can change the model deppending on your hardware
     active_models.add(model)
     await mark_model_used(model)
     check_runnig_model(model)
@@ -146,8 +145,8 @@ async def code(interaction: discord.Interaction, text: str):
 @bot.tree.command(name="analyze", description="Analyze an uploaded image")
 @app_commands.describe(image="Upload an image", prompt="Optional prompt")
 async def analyze(interaction: discord.Interaction,image: discord.Attachment,prompt: str = "Describe this image:"):
-    model = "moondream:latest"
-    active_models.add(model)
+    model = "moondream:latest"                      # You can change the model deppending on your hardware
+    active_models.add(model)        
     await mark_model_used(model)
     check_runnig_model(model)
     await interaction.response.send_message("Thinking...")

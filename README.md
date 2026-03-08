@@ -86,7 +86,7 @@ helps reducing **VRAM usage**.
 
 ---
 
-##  Logging
+## Logging
 
 Logs are written to:
 
