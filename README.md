@@ -1,35 +1,21 @@
-# Discord Ollama AI Bot 🤖
+# Discord Ollama AI Bot
 
-A Discord bot that connects to a **local Ollama server** to run AI models for chat, coding help, and image analysis.
-
-Supports multiple models and automatically manages VRAM by stopping unused models.
+A Discord bot that connects to a **local Ollama server** to run AI models for chat.
 
 ---
 
-## ✨ Features
-
-* 💬 Ask AI questions with `/ask`
-* 🧑‍💻 Coding assistant with `/code`
-* 🖼️ Image analysis with `/analyze`
-* 🧠 Automatic model management
-* ⏱️ Idle model shutdown to free VRAM
-* 📜 Logging system
-* ⚡ Async requests for better performance
-
----
-
-## 🧠 Supported Commands
+## Supported Commands
 
 | Command           | Description                          |
 | ----------------- | ------------------------------------ |
-| `/ask`            | Ask the small general model          |
+| `/ask`            | Ask the general model                |
 | `/code`           | Ask the coding model                 |
 | `/analyze`        | Analyze an uploaded image            |
-| `/active_models` | Show currently running Ollama models |
+| `/active_models`  | Show currently running Ollama models |
 
 ---
 
-## 📦 Requirements
+## Requirements
 
 * Python **3.10+**
 * A running **Ollama server**
@@ -43,7 +29,7 @@ pip install discord.py aiohttp
 
 ---
 
-## 🤖 Required Models
+## 🤖 Required Models by default
 
 Install the models you want to use:
 
@@ -71,7 +57,7 @@ cd discord-ollama-bot
 Inside the script:
 
 ```
-TOKEN = "your_discord_bot_token"
+TOKEN = "YOOUR_TOKEN"
 ```
 
 ### 3. Start Ollama
@@ -112,20 +98,9 @@ They also appear in the console.
 
 ---
 
-## 🛠️ Possible Improvements
-
-* Streaming responses
-* Multi-user conversation memory
-* Per-server model settings
-* Model load balancing
-* Web dashboard
-
----
-
 ## 📄 License
 
 This project is licensed under the **MIT License**.
-See the `LICENSE` file for details.
 
 ---
 
