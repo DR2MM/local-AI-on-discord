@@ -29,7 +29,7 @@ pip install discord.py aiohttp
 
 ---
 
-## 🤖 Required Models by default
+## Required Models by default
 
 Install the models you want to use:
 
@@ -43,7 +43,7 @@ You can change models inside the bot code.
 
 ---
 
-## 🚀 Setup
+## Setup
 
 ### 1. Clone the repository
 
@@ -74,7 +74,7 @@ python bot.py
 
 ---
 
-## ⚙️ Model Management
+## bot Management
 
 The bot automatically:
 
@@ -82,11 +82,11 @@ The bot automatically:
 * tracks model usage
 * shuts down models after **2 minutes of inactivity**
 
-This helps reduce **VRAM usage**.
+helps reducing **VRAM usage**.
 
 ---
 
-## 📜 Logging
+##  Logging
 
 Logs are written to:
 
@@ -108,10 +108,3 @@ This project is licensed under the **MIT License**.
 
 This bot runs AI models locally through Ollama.
 Performance depends on your hardware and available VRAM.
-
----
-
-## ⭐ Contributing
-
-Pull requests and improvements are welcome.
-Feel free to open an issue if you find bugs or want new features.
