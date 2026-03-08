@@ -25,7 +25,7 @@ Supports multiple models and automatically manages VRAM by stopping unused model
 | `/ask`            | Ask the small general model          |
 | `/code`           | Ask the coding model                 |
 | `/analyze`        | Analyze an uploaded image            |
-| `/running_models` | Show currently running Ollama models |
+| `/active_models` | Show currently running Ollama models |
 
 ---
 
