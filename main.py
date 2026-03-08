@@ -145,8 +145,7 @@ async def code(interaction: discord.Interaction, text: str):
 
 @bot.tree.command(name="analyze", description="Analyze an uploaded image")
 @app_commands.describe(image="Upload an image", prompt="Optional prompt")
-async def analyze(
-    interaction: discord.Interaction,image: discord.Attachment,prompt: str = "Describe this image:"):
+async def analyze(interaction: discord.Interaction,image: discord.Attachment,prompt: str = "Describe this image:"):
     model = "moondream:latest"
     active_models.add(model)
     await mark_model_used(model)
