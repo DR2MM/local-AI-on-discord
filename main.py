@@ -1,25 +1,10 @@
-import importlib
-import subprocess
-import sys
-
-def ensure(package):
-    try:
-        importlib.import_module(package)
-    except ImportError:
-        print(f"Installing {package}...")
-        subprocess.check_call([sys.executable, "-m", "pip", "install", package])
-
-# Libraries needed
-ensure("discord")
-ensure("aiohttp")
-
-import asyncio, base64, logging, time, aiohttp, discord
+import asyncio, base64, logging, time, aiohttp, discord, subprocess
 from discord import app_commands
 from discord.ext import commands
 
 # Vars
 TOKEN = "YOUR_TOKEN"
-logging.basicConfig( level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s", handlers=[logging.FileHandler("bot.log", encoding="utf-8"),logging.StreamHandler()])
+logging.basicConfig( level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s", handlers=[logging.FileHandler("logs.log", encoding="utf-8"),logging.StreamHandler()])
 intents = discord.Intents.default()
 bot = commands.Bot(command_prefix="!", intents=intents)  
 MODEL_IDLE_TIMEOUT = 600                        # the max amount of time a model can stay up doing nothing (better for saving resources)
