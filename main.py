@@ -1,4 +1,19 @@
-import asyncio, base64, subprocess, logging, time, aiohttp, discord
+import importlib
+import subprocess
+import sys
+
+def ensure(package):
+    try:
+        importlib.import_module(package)
+    except ImportError:
+        print(f"Installing {package}...")
+        subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
+# Libraries needed
+ensure("discord")
+ensure("aiohttp")
+
+import asyncio, base64, logging, time, aiohttp, discord
 from discord import app_commands
 from discord.ext import commands
 

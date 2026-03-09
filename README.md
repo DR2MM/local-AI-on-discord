@@ -21,12 +21,6 @@ A Discord bot that connects to a **local Ollama server** to run AI models for ch
 * A running **Ollama server**
 * Discord bot token
 
-Python packages:
-
-```
-pip install discord.py aiohttp
-```
-
 ---
 
 ## Required Models by default
@@ -68,10 +62,8 @@ ollama serve
 
 ### 4. Run the bot
 
-```
-python bot.py
-```
-
+- For linux run the `linux.sh` script.
+- For Windows run `Windows.bat` script.
 ---
 
 ## bot Management
