@@ -32,7 +32,7 @@ async def ollama_chat(model, messages, timeout_s = 180):
             data = await resp.json()
     return data["message"]["content"]
 
-def chunk(text: str, size: int = 1900):             # Discord's hard limit is 2000; keep margin for safety.
+def chunk(text: str, size: int = 1900):             # Discord's hard limit is 2000, keep margin for safety.
     for i in range(0, len(text), size):
         yield text[i : i + size]
 
@@ -113,8 +113,7 @@ async def ask(interaction: discord.Interaction, text: str):
         await interaction.edit_original_response(content=f"Error: {type(e).__name__}: {e}")
         return
 
-    # bypassing Discord's 2000 char limit
-    parts = list(chunk(reply))
+    parts = list(chunk(reply))                      # bypassing Discord's 2000 char limit
     await interaction.edit_original_response(content=parts[0])
     for p in parts[1:]:
         await interaction.followup.send(p)
