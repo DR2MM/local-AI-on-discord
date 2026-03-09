@@ -1,102 +1,160 @@
-# Discord Ollama AI Bot
+# Local AI on Discord
 
-A Discord bot that connects to a **local Ollama server** to run AI models for chat.
+> Run local AI models entirely on your own hardware and interact with them through Discord — no cloud, no API costs, no data leaving your machine.
 
 ---
 
-## Supported Commands
+## Overview
 
-| Command           | Description                          |
-| ----------------- | ------------------------------------ |
-| `/ask`            | Ask the general model                |
-| `/code`           | Ask the coding model                 |
-| `/analyze`        | Analyze an uploaded image            |
-| `/active_models`  | Show currently running Ollama models |
+**Local AI on Discord** is a self-hosted Discord bot that connects to a locally running [Ollama](https://ollama.com/) server all powered by models running on your own GPU or CPU.
+
+Model memory is managed automatically: idle models are unloaded after 2 minutes to free up VRAM, and only one model runs at a time by default.
+
+---
+
+
+## Commands
+
+| Command          | Description                              |
+|------------------|------------------------------------------|
+| `/ask`           | Send a prompt to the general chat model  |
+| `/code`          | Ask the coding-focused model             |
+| `/analyze`       | Analyze an uploaded image                |
+| `/active_models` | List currently loaded Ollama models      |
 
 ---
 
 ## Requirements
 
-* Python **3.10+**
-* A running **Ollama server**
-* Discord bot token
+| Requirement         | Details                        |
+|---------------------|--------------------------------|
+| Python              | 3.10 or higher                 |
+| [Ollama](https://ollama.com/) | Running locally (`ollama serve`) |
+| Discord Bot Token   | From the [Discord Developer Portal](https://discord.com/developers/applications) |
+| GPU (recommended)   | Any CUDA-compatible GPU; CPU fallback works but is slower |
 
 ---
 
-## Required Models by default
+## Default Models
 
-Install the models you want to use:
+The bot uses the following models out of the box. Pull them before starting:
 
+```bash
+ollama pull phi3:mini           # General chat
+ollama pull deepseek-coder:6.7b # Code assistance
+ollama pull moondream:latest    # Image analysis
 ```
-ollama pull phi3:mini
-ollama pull deepseek-coder:6.7b
-ollama pull moondream:latest
-```
 
-You can change models inside the bot code.
+> You can swap any of these for other Ollama-compatible models by editing `main.py`.
 
 ---
 
 ## Setup
 
-### 1. Clone the repository
+### 1. Clone the repo
 
-```
-git clone https://github.com/yourname/discord-ollama-bot
-cd discord-ollama-bot
+```bash
+git clone https://github.com/DR2MM/local-AI-on-discord.git
+cd local-AI-on-discord
 ```
 
-### 2. Add your Discord token
+### 2. Configure your Discord bot token
 
-Inside the script:
+Open `main.py` and replace the placeholder with your token:
 
+```python
+TOKEN = "YOUR_DISCORD_BOT_TOKEN_HERE"
 ```
-TOKEN = "YOOUR_TOKEN"
-```
+
 
 ### 3. Start Ollama
 
-```
+```bash
 ollama serve
 ```
 
+Make sure the models you intend to use are already pulled (see above).
+
 ### 4. Run the bot
 
-- For linux run the `linux.sh` script.
-- For Windows run `Windows.bat` script.
+**Linux:**
+```bash
+bash setup_linux.sh
+```
+
+**Windows:**
+```bat
+setup_windows.bat
+```
+
+Or run manually:
+```bash
+pip install -r requirements.txt
+python main.py
+```
+
 ---
 
-## bot Management
+## How It Works
 
-The bot automatically:
+```
+Discord User
+    │
+    │  /ask, /code, /analyze
+    ▼
+Discord Bot (main.py)
+    │
+    │  HTTP requests
+    ▼
+Ollama Server (localhost)
+    │
+    ▼
+Local AI Model (phi3, deepseek-coder, moondream, ...)
+```
 
-* stops other models when a new one is used
-* tracks model usage
-* shuts down models after **2 minutes of inactivity**
+The bot sends your prompts to the Ollama REST API running on your machine. Responses are streamed back and posted to the Discord channel. No data is sent to any external service.
 
-helps reducing **VRAM usage**.
+---
+
+## VRAM Management
+
+To keep memory usage low:
+
+- Only **one model runs at a time** — switching commands automatically unloads the previous model.
+- Any model idle for more than **2 minutes** is automatically stopped.
+- The `/active_models` command shows you the current state at any time.
 
 ---
 
 ## Logging
 
-Logs are written to:
+All interactions and errors are logged to:
 
 ```
 bot.log
 ```
 
-They also appear in the console.
+Logs are also mirrored to the console in real time.
 
 ---
 
-## 📄 License
+## Troubleshooting
 
-This project is licensed under the **MIT License**.
+| Problem | Solution |
+|---|---|
+| Bot doesn't respond | Check that `ollama serve` is running and the bot token is correct |
+| Slow responses | Expected on CPU; a CUDA GPU significantly speeds up inference |
+| Model not found | Run `ollama pull <model-name>` before starting the bot |
+| Commands not showing in Discord | Wait a few minutes for slash commands to sync, or restart the bot |
 
 ---
 
-## ⚠️ Disclaimer
+## License
 
-This bot runs AI models locally through Ollama.
-Performance depends on your hardware and available VRAM.
+This project is licensed under the **MIT License**
+
+---
+
+## Disclaimer
+
+This bot runs AI models entirely on your local hardware via Ollama. Response speed and quality depend on your machine's specs and the models you choose. The authors are not responsible for any content generated by the models.
