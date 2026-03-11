@@ -63,7 +63,7 @@ cd local-AI-on-discord
 Open `main.py` and replace the placeholder with your token:
 
 ```python
-TOKEN = "YOUR_DISCORD_BOT_TOKEN_HERE"
+TOKEN = "YOUR_TOKEN"
 ```
 
 
