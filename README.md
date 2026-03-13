@@ -75,7 +75,7 @@ ollama serve
 
 Make sure the models you intend to use are already pulled (see above).
 
-### 4. Run the bot
+### 4. Run the setup
 
 **Linux:**
 ```bash
@@ -86,13 +86,12 @@ bash setup_linux.sh
 ```bat
 setup_windows.bat
 ```
+> these *setup* files prepare the python environment for the bot.
 
-Or run manually:
+### 5. Run the bot
 ```bash
-pip install -r requirements.txt
 python main.py
 ```
-
 ---
 
 ## How It Works
